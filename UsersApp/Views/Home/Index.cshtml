@@ -1,0 +1,75 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<div class="hero-section mb-5">
+    <div class="row align-items-center">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <h1 class="display-3 fw-bold mb-3">Welcome to Smardhomes</h1>
+            <p class="lead mb-4">
+                Experience the future of modular construction. Build your dream space with our innovative prefabricated solutions.
+            </p>
+            <div class="d-flex gap-3">
+                <a asp-controller="Account" asp-action="Login" class="btn btn-primary btn-lg">Get Started</a>
+                <a asp-controller="Home" asp-action="Privacy" class="btn btn-outline-secondary btn-lg">Learn More</a>
+            </div>
+        </div>
+          <div class="col-lg-6 text-center">
+            <img src="~/images/Building image.jpg" alt="" class=" mb-3" style="max-width: 600px;" />
+        </div>  
+    </div>
+</div>
+
+
+<div class="features-section mt-5 pt-5">
+    <h2 class="text-center mb-5 fw-bold">Our Solutions</h2>
+    <div class="row g-4">
+       
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm hover-card">
+                <img src="/images/Twin Accommodation.jpeg" class="card-img-top" alt="Modular Homes" />
+                <div class="card-body text-center">
+                    <h5 class="card-title fw-bold">Modular Homes</h5>
+                    <p class="card-text">
+                        Choose from A-Frame and Delta models including 1BHK, 2BHK, 3BHK, and Studio apartments designed for modern living.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm hover-card">
+                <img src="~/images/Chidambaram.jpeg" class="card-img-top" alt="Customization" />
+                <div class="card-body text-center">
+                    <h5 class="card-title fw-bold">Custom Solutions</h5>
+                    <p class="card-text">
+                        Flexible foundation options and super structure configurations tailored to your specific requirements and location.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm hover-card">
+                <img src="~/images/Bed room.jpeg" class="card-img-top" alt="Quick Delivery" />
+                <div class="card-body text-center">
+                    <h5 class="card-title fw-bold">Fast & Reliable</h5>
+                    <p class="card-text">
+                        Quick quotation process and reliable construction timelines. Request your quotation today and get started.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="cta-section mt-5 pt-5 pb-5 text-center">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h3 class="mb-3">Ready to Build Your Dream Space?</h3>
+            <p class="lead mb-4">Get a detailed quotation for your modular construction project in minutes.</p>
+            <a asp-controller="Account" asp-action="Register" class="btn btn-success btn-lg px-5">Register Now</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,517 @@
+@model UsersApp.ViewModels.QuotationDisplayViewModel
+
+@{
+    ViewData["Title"] = "Quotation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="quotation-wrapper">
+    <div class="quotation-actions mb-3">
+        <button onclick="window.print()" class="btn btn-primary">
+            <i class="bi bi-printer"></i> Print Quotation
+        </button>
+        <a asp-controller="Account" asp-action="RequestQuotation" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Request
+        </a>
+    </div>
+
+    <div class="quotation-container" id="quotationContent">
+        <div class="quotation-header">
+            <div class="quotation-title">
+                <h1>QUOTATION</h1>
+            </div>
+            <div class="company-logo">
+                <img src="~/images/Smard Homes .png" alt="Company Logo" style="height: 40px;" />
+            </div>
+        </div>
+
+        <div class="quotation-greeting">
+            <p>Dear <strong>@Model.ClientName</strong>,</p>
+            <p>Location : <strong>@Model.Location</strong></p>
+            <p>As refer to the discussion regarding the above subject we hereby submitting our best & competitive offer as per our design. It includes material, design, fabrication and relevant terms and conditions.</p>
+        </div>
+
+        <table class="quotation-table">
+            <thead>
+                <tr>
+                    <th style="width: 8%;">SL NO</th>
+                    <th style="width: 45%;">DESCRIPTION OF THE WORK</th>
+                    <th style="width: 12%;">UNIT</th>
+                    <th style="width: 12%;">QUANTITY</th>
+                    <th style="width: 23%;">RATE</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.MainItems)
+                {
+                    <tr>
+                        <td class="text-center">@item.SerialNo</td>
+                        <td>@item.Description</td>
+                        <td class="text-center">@item.Unit</td>
+                        <td class="text-center">@item.Quantity</td>
+                        <td class="rate">@item.Rate</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr class="total-row">
+                    <td colspan="5">TOTAL IN RUPEES: @Model.TotalInWords</td>
+                </tr>
+            </tfoot>
+        </table>
+
+        @if (Model.OptionalItems != null && Model.OptionalItems.Any())
+        {
+            <div class="optional-items-section">
+                <h4>OPTIONAL ITEMS</h4>
+                <table class="quotation-table optional-table">
+                    <tbody>
+                        @foreach (var item in Model.OptionalItems)
+                        {
+                            <tr>
+                                <td style="width: 8%;" class="text-center">@item.SerialNo</td>
+                                <td style="width: 45%;">@item.Description</td>
+                                <td style="width: 12%;" class="text-center">@item.Unit</td>
+                                <td style="width: 12%;" class="text-center">@item.Quantity</td>
+                                <td style="width: 23%;" class="rate">@item.Rate</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        <div class="terms-section">
+            <div class="exclusion-column">
+                <h4>EXCLUSION</h4>
+                <ul>
+                    @foreach (var exclusion in Model.Exclusions)
+                    {
+                        <li>@exclusion</li>
+                    }
+                </ul>
+
+                <h5>PAYMENT TERMS:</h5>
+                <ul>
+                    @foreach (var term in Model.PaymentTerms)
+                    {
+                        <li>@term</li>
+                    }
+                </ul>
+
+                <p class="additional-note">**Additional charges may apply for Optional Items.</p>
+            </div>
+
+            <div class="client-column">
+                <h4>CLIENT RESPONSIBILITIES</h4>
+                <ul>
+                    @foreach (var responsibility in Model.ClientResponsibilities)
+                    {
+                        <li>@responsibility</li>
+                    }
+                </ul>
+
+                <h5>WARRANTY:</h5>
+                <ul>
+                    <li>@Model.Warranty</li>
+                </ul>
+
+                <h5>PRODUCTION SCHEDULE:</h5>
+                <ul>
+                    <li>@Model.ProductionSchedule</li>
+                </ul>
+
+                <h5>INSTALLATION:</h5>
+                <ul>
+                    <li>@Model.Installation</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-section">
+            <div class="signature-section">
+                <p class="faithfully">Yours Faithfully,</p>
+                <p class="company-name-footer">For @Model.CompanyName</p>
+                <br />
+                <br />
+                <p class="signatory">@Model.SignatoryName</p>
+                <p class="signatory-title">@Model.SignatoryTitle</p>
+                <p class="contact">Contact No: @Model.ContactNumber</p>
+            </div>
+
+            <div class="acceptance-section">
+                <p><strong>Acceptance</strong></p>
+                <p>(Clients Name)</p>
+                <br />
+                <br />
+                <br />
+                <p>Date:</p>
+            </div>
+
+            <div class="bank-details">
+                <h4>BANK ACCOUNT DETAILS</h4>
+                <table class="bank-table">
+                    <tr>
+                        <td>ACCOUNT NAME</td>
+                        <td>:</td>
+                        <td><strong>@Model.BankAccountName</strong></td>
+                    </tr>
+                    <tr>
+                        <td>ACCOUNT NUMBER</td>
+                        <td>:</td>
+                        <td><strong>@Model.BankAccountNumber</strong></td>
+                    </tr>
+                    <tr>
+                        <td>BANK</td>
+                        <td>:</td>
+                        <td><strong>@Model.BankName</strong></td>
+                    </tr>
+                    <tr>
+                        <td>IFSC CODE</td>
+                        <td>:</td>
+                        <td><strong>@Model.IfscCode</strong></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .quotation-wrapper {
+        background: #f5f5f5;
+        padding: 20px;
+        min-height: 100vh;
+    }
+
+    .quotation-actions {
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+
+    .quotation-container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 50px;
+        background: white;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        font-family: Arial, sans-serif;
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+    .quotation-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid #2c3e50;
+    }
+
+    .quotation-title h1 {
+        font-size: 32px;
+        font-weight: bold;
+        color: #2c3e50;
+        margin: 0;
+        letter-spacing: 3px;
+    }
+
+    .company-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .company-logo-img {
+        height: 60px;
+        width: auto;
+        object-fit: contain;
+    }
+
+    .quotation-greeting {
+        margin-bottom: 25px;
+        color: #333;
+        font-size: 11px;
+    }
+
+        .quotation-greeting p:first-child {
+            margin-bottom: 10px;
+        }
+
+    .quotation-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+        .quotation-table th {
+            background-color: #e8e8e8;
+            padding: 12px 8px;
+            text-align: center;
+            border: 1px solid #666;
+            font-weight: bold;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+
+        .quotation-table td {
+            padding: 12px 10px;
+            border: 1px solid #666;
+            font-size: 11px;
+        }
+
+        .quotation-table tbody td:nth-child(2) {
+            text-align: left;
+        }
+
+        .quotation-table .rate {
+            background-color: #e8e8e8;
+            font-weight: bold;
+            text-align: center;
+        }
+
+    .total-row td {
+        background-color: #d0d0d0 !important;
+        font-weight: bold;
+        text-align: center;
+        padding: 12px;
+        text-transform: uppercase;
+        font-size: 11px;
+    }
+
+    .optional-items-section {
+        margin-top: 25px;
+    }
+
+        .optional-items-section h4 {
+            text-align: center;
+            background-color: #e8e8e8;
+            padding: 10px;
+            margin-bottom: 0;
+            border: 1px solid #666;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+    .optional-table {
+        margin-top: 0;
+    }
+
+    .terms-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-top: 35px;
+    }
+
+    .exclusion-column h4,
+    .client-column h4 {
+        font-size: 12px;
+        margin-bottom: 12px;
+        text-decoration: underline;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .exclusion-column h5,
+    .client-column h5 {
+        font-size: 11px;
+        margin-top: 18px;
+        margin-bottom: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .terms-section ul {
+        list-style: none;
+        padding-left: 0;
+        margin: 5px 0;
+    }
+
+        .terms-section ul li {
+            padding-left: 20px;
+            position: relative;
+            margin-bottom: 6px;
+            line-height: 1.6;
+            font-size: 10.5px;
+        }
+
+            .terms-section ul li::before {
+                content: "■";
+                position: absolute;
+                left: 0;
+                font-size: 8px;
+                top: 2px;
+            }
+
+    .additional-note {
+        margin-top: 18px;
+        font-weight: bold;
+        font-size: 10px;
+    }
+
+    .footer-section {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr 1fr;
+        gap: 25px;
+        margin-top: 50px;
+        padding-top: 20px;
+        border-top: 1px solid #ddd;
+    }
+
+    .signature-section .faithfully {
+        margin-bottom: 5px;
+        font-size: 11px;
+    }
+
+    .signature-section .company-name-footer {
+        font-weight: bold;
+        margin-bottom: 10px;
+        font-size: 11px;
+    }
+
+    .signature-section .signatory {
+        font-weight: bold;
+        margin-bottom: 3px;
+        font-size: 11px;
+    }
+
+    .signature-section .signatory-title,
+    .signature-section .contact {
+        font-size: 10px;
+        margin-bottom: 3px;
+    }
+
+    .acceptance-section {
+        text-align: center;
+        padding-top: 20px;
+        font-size: 11px;
+    }
+
+        .acceptance-section p {
+            margin-bottom: 8px;
+        }
+
+    .bank-details {
+        border: 2px solid #333;
+        padding: 15px;
+    }
+
+        .bank-details h4 {
+            text-align: center;
+            font-size: 11px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+    .bank-table {
+        width: 100%;
+    }
+
+        .bank-table td {
+            padding: 5px 2px;
+            border: none;
+            font-size: 10px;
+        }
+
+            .bank-table td:first-child {
+                width: 42%;
+            }
+
+            .bank-table td:nth-child(2) {
+                width: 8%;
+                text-align: center;
+            }
+
+            .bank-table td:last-child {
+                width: 50%;
+            }
+
+    @@media print {
+        /* Hide layout header and footer */
+        header, footer, nav, .navbar {
+            display: none !important;
+        }
+
+        .quotation-wrapper {
+            background: white;
+            padding: 0;
+            margin: 0;
+            min-height: auto;
+        }
+
+        .quotation-actions {
+            display: none !important;
+        }
+
+        .quotation-container {
+            box-shadow: none;
+            margin: 0;
+            padding: 20px;
+            max-width: 100%;
+            page-break-after: auto;
+        }
+
+        .quotation-header {
+            page-break-after: avoid;
+        }
+
+        .quotation-table {
+            page-break-inside: avoid;
+        }
+
+        .terms-section {
+            page-break-inside: avoid;
+        }
+
+        .footer-section {
+            page-break-before: avoid;
+        }
+
+        .company-logo img {
+            height: 40px;
+            max-height: 40px;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
+        }
+
+        @@page {
+            margin: 0.5cm;
+            size: A4;
+        }
+    }
+
+    @@media screen and (max-width: 768px) {
+        .quotation-container {
+            padding: 20px;
+            font-size: 10px;
+        }
+
+        .quotation-header {
+            flex-direction: column;
+            text-align: center;
+            gap: 15px;
+        }
+
+        .company-logo-img {
+            height: 50px;
+        }
+
+        .terms-section,
+        .footer-section {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>

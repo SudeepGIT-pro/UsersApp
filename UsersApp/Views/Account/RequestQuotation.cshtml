@@ -1,0 +1,281 @@
+@model UsersApp.ViewModels.RequestQuotationViewModel
+
+@{
+    ViewData["Title"] = "Request Quotation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">Request Quotation</h2>
+
+                    <form asp-controller="Account" asp-action="RequestQuotation" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="ClientName" class="form-label"></label>
+                            <input asp-for="ClientName" class="form-control" placeholder="Enter client name" />
+                            <span asp-validation-for="ClientName" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Location" class="form-label"></label>
+                            <input asp-for="Location" class="form-control" placeholder="Enter location" />
+                            <span asp-validation-for="Location" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TypeOfModel" class="form-label"></label>
+                            <select asp-for="TypeOfModel" class="form-select" id="typeOfModel">
+                                <option value="">-- Select Type of Model --</option>
+                                <option value="A FRAME">A FRAME</option>
+                                <option value="DELTA 1 BHK">DELTA 1 BHK</option>
+                                <option value="DELTA 2 BHK">DELTA 2 BHK</option>
+                                <option value="DELTA 3 BHK">DELTA 3 BHK</option>
+                                <option value="DELTA STUDIO A">DELTA STUDIO A</option>
+                                <option value="DELTA STUDIO B">DELTA STUDIO B</option>
+                                <option value="Custom">Custom</option>
+                            </select>
+                            <span asp-validation-for="TypeOfModel" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="NumberOfUnits" class="form-label"></label>
+                            <input asp-for="NumberOfUnits" type="number" class="form-control" min="1" step="1" placeholder="Enter number of units" />
+                            <span asp-validation-for="NumberOfUnits" class="text-danger"></span>
+                            <small class="form-text text-muted">Minimum 1 unit required</small>
+                        </div>
+
+                        <div id="boqSection" style="display: none;">
+                        <hr class="my-4" />
+                        <h4 class="mb-3">Bill of Quantities (BOQ)</h4>
+
+                        <div class="mb-3">
+                            <label asp-for="FoundationType" class="form-label fw-bold">Foundation</label>
+                            <select asp-for="FoundationType" class="form-select" id="foundationType">
+                                <option value="">-- Select Foundation Type --</option>
+                                <option value="Reinforced Cement Concrete (RCC)">Reinforced Cement Concrete (RCC)</option>
+                                <option value="Pedestal">Pedestal</option>
+                                <option value="Random Rubble (RR)">Random Rubble (RR)</option>
+                            </select>
+                        </div>
+
+                        <div id="foundationDetails" style="display: none;">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FoundationArea" class="form-label"></label>
+                                    <div class="input-group">
+                                        <input asp-for="FoundationArea" type="number" step="0.01" class="form-control" id="foundationArea" placeholder="0.00" />
+                                        <span class="input-group-text">sq.m</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label asp-for="FoundationAmount" class="form-label"></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">₹</span>
+                                        <input asp-for="FoundationAmount" type="number" step="0.01" class="form-control" id="foundationAmount" placeholder="0.00" readonly />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 mt-4">
+                            <label asp-for="SuperStructureType" class="form-label fw-bold">Super Structure</label>
+                            <select asp-for="SuperStructureType" class="form-select" id="superStructureType">
+                                <option value="">-- Select Super Structure Type --</option>
+                                <option value="Panel">Panel</option>
+                                <option value="Module">Module</option>
+                                <option value="Hybrid">Hybrid</option>
+                            </select>
+                        </div>
+
+                        <div id="wallTypesSection" style="display: none;">
+                            <div id="wallTypesList">
+                              
+                            </div>
+                            <button type="button" class="btn btn-outline-success btn-sm mt-2 mb-3" id="addWallTypeBtn">
+                                + Add Another Wall Type
+                            </button>
+                        </div>
+                        </div>
+                      
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">Submit Request</button>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <a asp-controller="Home" asp-action="Index" class="text-decoration-none">Back to Home</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            console.log('Form is being submitted');
+            const clientName = document.querySelector('input[name="ClientName"]').value;
+            const location = document.querySelector('input[name="Location"]').value;
+            const typeOfModel = document.querySelector('select[name="TypeOfModel"]').value;
+            console.log('Client Name:', clientName);
+            console.log('Location:', location);
+            console.log('Type of Model:', typeOfModel);
+
+            if (!clientName || !location || !typeOfModel) {
+                console.log('Required fields are missing!');
+            }
+        });
+
+        document.getElementById('typeOfModel').addEventListener('change', function() {
+            const boqSection = document.getElementById('boqSection');
+            if (this.value === 'Custom') {
+                boqSection.style.display = 'block';
+            } else {
+                boqSection.style.display = 'none';
+                
+                document.getElementById('foundationType').value = '';
+                document.getElementById('foundationDetails').style.display = 'none';
+                document.getElementById('foundationArea').value = '';
+                document.getElementById('foundationAmount').value = '';
+                document.getElementById('superStructureType').value = '';
+                document.getElementById('wallTypesSection').style.display = 'none';
+                document.getElementById('wallTypesList').innerHTML = '';
+                wallTypeCounter = 0;
+            }
+        });
+
+       
+        const foundationRates = {
+            'Reinforced Cement Concrete (RCC)': 2500,
+            'Pedestal': 1800,
+            'Random Rubble (RR)': 1200
+        };
+
+       
+        document.getElementById('foundationType').addEventListener('change', function() {
+            const foundationDetails = document.getElementById('foundationDetails');
+            if (this.value) {
+                foundationDetails.style.display = 'block';
+              
+                document.getElementById('foundationArea').value = '';
+                document.getElementById('foundationAmount').value = '';
+            } else {
+                foundationDetails.style.display = 'none';
+            }
+        });
+
+      
+        document.getElementById('foundationArea').addEventListener('input', function() {
+            const foundationType = document.getElementById('foundationType').value;
+            const area = parseFloat(this.value) || 0;
+
+            if (foundationType && area > 0) {
+                const rate = foundationRates[foundationType];
+                const amount = area * rate;
+                document.getElementById('foundationAmount').value = amount.toFixed(2);
+            } else {
+                document.getElementById('foundationAmount').value = '';
+            }
+        });
+
+       
+        window.addEventListener('DOMContentLoaded', function() {
+            const typeOfModel = document.getElementById('typeOfModel').value;
+            const boqSection = document.getElementById('boqSection');
+
+           
+            if (typeOfModel === 'Custom') {
+                boqSection.style.display = 'block';
+            }
+
+            const foundationType = document.getElementById('foundationType').value;
+            if (foundationType) {
+                document.getElementById('foundationDetails').style.display = 'block';
+            }
+
+            const superStructureType = document.getElementById('superStructureType').value;
+            if (superStructureType) {
+                document.getElementById('wallTypesSection').style.display = 'block';
+            }
+        });
+
+        let wallTypeCounter = 0;
+
+        document.getElementById('superStructureType').addEventListener('change', function() {
+            const wallTypesSection = document.getElementById('wallTypesSection');
+            const wallTypesList = document.getElementById('wallTypesList');
+
+            if (this.value) {
+                wallTypesSection.style.display = 'block';
+                if (wallTypesList.children.length === 0) {
+                    addWallTypeEntry();
+                }
+            } else {
+                wallTypesSection.style.display = 'none';
+                wallTypesList.innerHTML = '';
+                wallTypeCounter = 0;
+            }
+        });
+
+       
+        document.getElementById('addWallTypeBtn').addEventListener('click', function() {
+            addWallTypeEntry();
+        });
+
+        function addWallTypeEntry() {
+            const wallTypesList = document.getElementById('wallTypesList');
+            const entryDiv = document.createElement('div');
+            entryDiv.className = 'card mb-2';
+            entryDiv.id = `wallTypeEntry-${wallTypeCounter}`;
+
+            entryDiv.innerHTML = `
+                <div class="card-body">
+                    <div class="row align-items-end">
+                        <div class="col-md-5 mb-2">
+                            <label class="form-label">Wall Type</label>
+                            <select name="WallTypes[${wallTypeCounter}]" class="form-select">
+                                <option value="">-- Select Wall Type --</option>
+                                <option value="Wall Type 1">Wall Type 1</option>
+                                <option value="Wall Type 2">Wall Type 2</option>
+                                <option value="Wall Type 3">Wall Type 3</option>
+                                <option value="Wall Type 4">Wall Type 4</option>
+                                <option value="Wall Type 5">Wall Type 5</option>
+                                <option value="Wall Type 6">Wall Type 6</option>
+                                <option value="Wall Type 7">Wall Type 7</option>
+                            </select>
+                        </div>
+                        <div class="col-md-5 mb-2">
+                            <label class="form-label">Perimeter (m)</label>
+                            <input type="number" name="Perimeters[${wallTypeCounter}]" step="0.01" class="form-control" placeholder="Enter perimeter" />
+                        </div>
+                        <div class="col-md-2 mb-2">
+                            <button type="button" class="btn btn-danger btn-sm w-100" onclick="removeWallTypeEntry(${wallTypeCounter})">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            wallTypesList.appendChild(entryDiv);
+            wallTypeCounter++;
+        }
+
+        function removeWallTypeEntry(id) {
+            const entry = document.getElementById(`wallTypeEntry-${id}`);
+            if (entry) {
+                entry.remove();
+            }
+        } 
+    </script>
+}
