@@ -1,11 +1,25 @@
 ﻿@using Microsoft.AspNetCore.Identity;
 @inject SignInManager<Users> signInManager;
+@inject UserManager<Users> userManager;
 
 <ul class="navbar-nav ms-auto">
     @if (signInManager.IsSignedIn(User))
     {
-        <li class="nav-item d-flex align-items-center">
-            <a class="btn btn-danger btn-sm px-4" asp-controller="Account" asp-action="Logout">Logout</a>
+        var currentUser = await userManager.GetUserAsync(User);
+        var fullName = currentUser?.FullName ?? "User";
+        <li class="nav-item dropdown d-flex align-items-center">
+            <a class="nav-link dropdown-toggle text-dark fw-semibold" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Hello @fullName
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <a class="dropdown-item" asp-controller="Account" asp-action="ViewProfile">View Profile</a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                    <a class="dropdown-item text-danger" asp-controller="Account" asp-action="Logout">Logout</a>
+                </li>
+            </ul>
         </li>
     }
     else

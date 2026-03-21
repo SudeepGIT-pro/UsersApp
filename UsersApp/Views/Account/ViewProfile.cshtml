@@ -1,0 +1,36 @@
+@{
+    ViewData["Title"] = "My Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <span class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px; font-size: 2rem;">
+                            @ViewBag.FullName?.ToString().Substring(0, 1).ToUpper()
+                        </span>
+                    </div>
+                    <h3 class="card-title mb-4">My Profile</h3>
+
+                    <div class="text-start mb-3">
+                        <label class="form-label fw-bold">Name</label>
+                        <p class="form-control-plaintext border rounded px-3 py-2">@ViewBag.FullName</p>
+                    </div>
+
+                    <div class="text-start mb-4">
+                        <label class="form-label fw-bold">Email</label>
+                        <p class="form-control-plaintext border rounded px-3 py-2">@ViewBag.Email</p>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <a asp-controller="Account" asp-action="Logout" class="btn btn-danger">Logout</a>
+                        <a asp-controller="Account" asp-action="RequestQuotation" class="btn btn-outline-secondary">Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

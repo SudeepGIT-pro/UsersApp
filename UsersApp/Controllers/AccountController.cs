@@ -360,5 +360,18 @@ namespace UsersApp.Controllers
             TempData["WarningMessage"] = "Logout Successfully";
             return RedirectToAction("Index", "Home");
         }
+
+        public async Task<IActionResult> ViewProfile()
+        {
+            var user = await userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            ViewBag.FullName = user.FullName;
+            ViewBag.Email = user.Email;
+            return View();
+        }
     }
 }
